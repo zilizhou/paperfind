@@ -52,7 +52,13 @@ function addTr(){
   
  }
 
+function enterSearch(){
 
+if(event.keyCode==13){  
+     search();  
+    }     
+
+}
 
 function search() {
   
@@ -131,7 +137,8 @@ function search() {
         <div class="search-box">
             <div class="logo"></div>
             <form id="search-form" >
-                <input type="text" class="search-input-text" id="search-input" name="qinfo" value='test'/>
+                <input type="text" class="search-input-text" id="search-input" name="qinfo" onkeypress="enterSearch()"/>
+                <input type="text" style="display:none">
                 <input type="button" id='search-button' onclick="search()" class="search-input-button" value="搜索"/><br/><br/>
                 <input class='radiobox' type="radio" name="sel" value="paper" onclick="change(this)" checked="true"/> 论文
                 <input class='radiobox' type="radio" name="sel" value="journal" onclick="change(this)"/> 期刊
