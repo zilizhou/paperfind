@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- 兼容IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>论文检索</title>
+    <link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet">
+    <!--<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>-->
+    <!--<link rel="stylesheet" type="text/css" href="../css/style.css">-->
+    <script type="text/javascript" src="{{ url_for('static',filename='js/jquery-3.3.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='js/clipboard.min.js') }}"></script>
+    <!--<script type=text/javascript src="{{url_for('static', filename='js/jquery.js') }}"></script>-->
+    <!--<script type="text/javascript" href="{{ url_for('static',filename='js/jquery.js') }}"></script>-->
+
+    <!--<script type="text/javascript" href="{{ url_for('static',filename='js/jquery-3.3.1.js') }}"></script>-->
+  <script type="text/javascript">
+    
+var searchInfo;
+
+function addTr(){
+  //$("#listtable").empty();
+  $("#listtable  tr:not(:first)").html("");
+  //var tabel = document.getElementById("listtable");
+  for(i=1;i<=searchInfo.length;i++){
+    row="<tr>"+"<td>"+i+"</td>"+"<td>"+searchInfo[i-1]+"</td>"+"<td>"+"<input class='citebutton' type='button' value='点我引用' onclick='copypaper(this)'"+"id=cite"+i+">"+"</td>"+"</tr>";
+    
+  $("#listtable").append(row)
+  
+  }
+  
+
+  
+ }
+ 
+ function jouraddTr(){
+  
+  $("#listtable  tr:not(:first)").html("");
+  //var tabel = document.getElementById("listtable");
+  
+  for(i=1;i<=searchInfo.length;i++){
+    var infos=searchInfo[i-1].toString().split(',')
+  //console.log(infos)
+     jrow="<tr><td>"+i+"</td>"+"<td>"+infos[0]+"</td>"+"<td>"+infos[1]+"</td>"+"<td>"+infos[2]+"</td>"+"<td>"+infos[3]+"</td></tr>"
+   
+    
+    //row="<tr>"+"<td>"+i+"</td>"+"<td>"+infos[i-1]+"</td>"+"<td>"+"<input  type='button' value='点我引用' onclick='copypaper(this)'"+"id=cite"+i+">"+"</td>"+"</tr>";
+     
+  $("#listtable").append(jrow)
+  
+  }
+  
+ }
+
+function search() {
+  
+    $.ajax({
+            type: "POST",   //提交的方法
+            url:"http://127.0.0.1:5000/search", //提交的地址  
+            data:$('#search-form').serialize(),// 序列化表单值  
+            async: false,
+            dataType:'json',
+            error: function(request) {  //失败的话
+                 alert("Connection error");  
+            },  
+            success: function(data) {  //成功
+                 
+                 if (data['journal']){
+                  searchInfo=data['journal'];
+                     jouraddTr();
+                 }
+                 if (data['paper']){
+                  searchInfo=data['paper'];
+                     addTr();
+                 }
+                 //window.location.href="跳转页面"  
+            }  
+         });
+       }
+    
+ function copypaper(ob){
+  
+  var id = $(ob).attr("id");
+  var clipboard = new Clipboard('.citebutton', {
+        text: function() {
+            return searchInfo[id.substr(4,id.length)-1];
+        }
+    });
+    clipboard.on('success',
+    function(e) {
+        alert(searchInfo[id.substr(4,id.length)-1]+"\n\n"+" 已被复制到粘贴板");
+    });
+    clipboard.on('error',
+    function(e) {
+        console.log(e);
+    });
+  
+
+    //alert(searchInfo[id.substr(4,id.length)-1]+"\n\n"+" 已被复制到粘贴板");
+   
+  
+ }
+ 
+ 
+ function change(ob){
+  $("#listtable").html("");
+  var val=$(ob).attr("value");
+  if (val=='paper'){
+   
+   row="<tr> <th>序号</th> <th>论文</th> <th>引用</th></tr>"
+   $("#listtable").append(row)
+   
+  }
+  else{
+   
+   row="<tr> <th>序号</th> <th>期刊名称</th> <th>影响因子</th><th>5年影响因子</th><th>所在国家/地区</th></tr>"
+   $("#listtable").append(row)
+   
+  }
+  
+ }
+ 
+</script>
+</head>
+<body>
+    <div class="bg-div">
+        <div class="search-box">
+            <div class="logo"></div>
+            <form id="search-form" >
+                <input type="text" class="search-input-text" id="search-input" name="qinfo" value='test'/>
+                <input type="button" id='search-button' onclick="search()" class="search-input-button" value="搜索"/><br/><br/>
+                <input class='radiobox' type="radio" name="sel" value="paper" onclick="change(this)" checked="true"/> 论文
+                <input class='radiobox' type="radio" name="sel" value="journal" onclick="change(this)"/> 期刊
+            </form>
+        </div>
+    </div>
+    
+    <div >
+        
+        <table class="info-listtable" id='listtable' border="1" align='center'>
+          <tbody> 
+            <tr> <th>序号</th> <th>论文</th> <th>引用</th></tr>
+          
+          </tbody>
+            
+          </table>
+        
+        
+        
+    </div>
+    
+    
+</body>
+</html>
