@@ -25,32 +25,34 @@ function addTr(){
   for(i=1;i<=searchInfo.length;i++){
     row="<tr>"+"<td>"+i+"</td>"+"<td>"+searchInfo[i-1]+"</td>"+"<td>"+"<input class='citebutton' type='button' value='点我引用' onclick='copypaper(this)'"+"id=cite"+i+">"+"</td>"+"</tr>";
     
-  $("#listtable").append(row)
+  $("#listtable").append(row);
   
   }
   
-
   
  }
  
+
+
  function jouraddTr(){
   
   $("#listtable  tr:not(:first)").html("");
   //var tabel = document.getElementById("listtable");
-  
+
   for(i=1;i<=searchInfo.length;i++){
-    var infos=searchInfo[i-1].toString().split(',')
-  //console.log(infos)
-     jrow="<tr><td>"+i+"</td>"+"<td>"+infos[0]+"</td>"+"<td>"+infos[1]+"</td>"+"<td>"+infos[2]+"</td>"+"<td>"+infos[3]+"</td></tr>"
-   
+    var infos=searchInfo[i-1].toString().split(',');
+
+     jrow="<tr><td>"+i+"</td>"+"<td>"+infos[0]+"</td>"+"<td>"+infos[1]+"</td>"+"<td>"+infos[2]+"</td>"+"<td>"+infos[3]+"</td></tr>";
+
     
     //row="<tr>"+"<td>"+i+"</td>"+"<td>"+infos[i-1]+"</td>"+"<td>"+"<input  type='button' value='点我引用' onclick='copypaper(this)'"+"id=cite"+i+">"+"</td>"+"</tr>";
-     
-  $("#listtable").append(jrow)
-  
+
+  $("#listtable").append(jrow);
   }
   
  }
+
+
 
 function search() {
   
@@ -64,12 +66,14 @@ function search() {
                  alert("Connection error");  
             },  
             success: function(data) {  //成功
+
                  
-                 if (data['journal']){
+                 if ($('input[name="sel"]:checked').val()=='journal'){
                   searchInfo=data['journal'];
+
                      jouraddTr();
                  }
-                 if (data['paper']){
+                 if ($('input[name="sel"]:checked').val()=='paper'){
                   searchInfo=data['paper'];
                      addTr();
                  }

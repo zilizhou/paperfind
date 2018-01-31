@@ -14,13 +14,14 @@ def search():
     if request.method == 'POST':
         resu=[]
         if request.form['sel']=='paper':
-            paper = request.form['qinfo'].strip()
+            paper = request.form['qinfo'].strip().lower()
             resu=paperidx.searInfo(paper)
             result['paper']=resu
             result['journal']=[]
         if request.form['sel']=='journal':
-            jour = request.form['qinfo'].strip()
+            jour = request.form['qinfo'].strip().lower()
             resu=paperidx.searjInfo(jour)
+            print(resu)
             result['paper'] = []
             result['journal'] = resu
         print(result)

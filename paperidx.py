@@ -1,7 +1,7 @@
 ## -*- coding: utf-8 -*-
-import pymongo
+# import pymongo
 import docx
-from pymongo import MongoClient
+# from pymongo import MongoClient
 
 # conn=MongoClient('localhost',27017)
 # db=conn['paperIdx']
@@ -40,11 +40,12 @@ def openTableFile():
         f.write('\n')
         f.flush()
     f.close()
+
 def searjInfo(str):
     result = []
     for info in jinfolist:
 
-        if str in info:
+        if str in info.lower():
             result.append(info)
     return result
 def searInfo(str):
@@ -52,7 +53,7 @@ def searInfo(str):
     result=[]
     for info in pinfolist:
 
-        if str in info:
+        if str in info.lower():
             result.append(info)
     return result
 openFile()
